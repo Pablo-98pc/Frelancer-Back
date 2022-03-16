@@ -1,0 +1,11 @@
+POST http://localhost:3001/api/posts
+Content-Type: application/json
+
+{
+    "userName" : "Oscarini",
+    "description":"lets try this",
+    "price":90,
+    "subject":"first post",
+    "likes":0,
+    "tags" : ["Comercio","Barco"]
+}
