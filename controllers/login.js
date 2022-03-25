@@ -25,7 +25,8 @@ loginRouter.post('/', async(request,response)=> {
         name:user.name,
         userName: user.userName,
         token,
-        likes: user.likes
+        likes: user.likes,
+        chats : user.chats
     })
     }
   

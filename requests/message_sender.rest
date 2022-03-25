@@ -1,0 +1,8 @@
+POST http://localhost:3001/api/messages/sendMessages
+Content-Type: application/json
+
+{
+    "message" : "Que tal?",
+    "from" : "Pablo",
+    "to" : "Ana"
+}

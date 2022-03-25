@@ -10,8 +10,13 @@ const userSchema = new Schema({
     }],
     likes:[{
         type: String,
+    }],
+    chats : [{
+       type:String
        
     }]
+        
+    
 })
 
 userSchema.set('toJSON',{

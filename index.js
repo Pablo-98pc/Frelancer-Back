@@ -2,10 +2,12 @@ require('dotenv').config()
 require('./mongo')
 const Post = require('./models/Post')
 const express = require('express')
+const socket = require("socket.io");
 const app = express()
 const cors = require('cors')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
+const messageRouter = require('./controllers/messagesController')
 const User = require('./models/User')
 app.use(cors())
 
@@ -45,10 +47,16 @@ app.post('/api/posts/like/:id', async(request,response)=> {
             await user.save()
             post.likes = post.likes + 1
             await post.save()
-            response.json(id)
+            response.json(user.likes)
         }
         else {
-            response.status(400).end()
+            let i = user.likes.indexOf(id)
+            user.likes.splice(i,1);
+            await user.save()
+            post.likes =post.likes -1 
+            await post.save(user.likes)
+            response.json(user.likes)
+
         }
         
     } catch (error) {
@@ -88,8 +96,35 @@ app.post('/api/posts',async (request,response)=> {
 })
 app.use('/api/users', usersRouter)
 app.use('/api/login',loginRouter)
+app.use('/api/messages',messageRouter)
 
 const PORT = 3001;
-app.listen(PORT,()=> {
+const server = app.listen(PORT,()=> {
     console.log(PORT)
+});
+
+const io = socket(server, {
+    cors: {
+      origin: "http://localhost:3000",
+      credentials: true,
+      methods : ["GET", "POST"]
+    },
+  });
+
+ const onlineUsers = new Map();
+
+io.on("connection", (socket) => {
+  socket.on("add-user", (userName) => { 
+    const newUser = onlineUsers.set(userName, socket.id);
+    console.log(newUser)
+  });
+
+  socket.on("send-msg", (data) => {
+    const sendUserSocket = onlineUsers.get(data.to);
+    console.log(onlineUsers)
+    if (sendUserSocket) {
+      socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+      console.log(data.msg)
+    }
+  });
 });
