@@ -20,6 +20,34 @@ usersRouter.get('/:userName', async (request,response)=> {
     }
     
 })
+usersRouter.get('/searchUsers/:params', async (request,response)=> {
+    try {
+         const {params} = request.params 
+        const users = await User.find({userName : new RegExp(params)})
+        response.json(users)
+        
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+usersRouter.post('/chats',async(request,response)=> {
+    
+    try {
+        const userChats = []
+        const {chats} = request.body;
+        chats.forEach(async (chat)=> {
+            const user = await User.find({userName : chat})
+            userChats.concat(user)
+        })
+        response.json(userChats) 
+        
+
+    } catch (error) {
+        console.error(error)
+    }
+})
+
 
 usersRouter.post('/', async(request,response)=> {
    
@@ -44,7 +72,8 @@ usersRouter.post('/', async(request,response)=> {
         name:savedUser.name,
         userName:savedUser.userName,
         token,
-        likes : savedUser.likes
+        likes : savedUser.likes,
+        chats : savedUser.chats
 
     })
     } catch(e){

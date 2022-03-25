@@ -1,6 +1,6 @@
-POST http://localhost:3001/api/posts/like/623120565e8b76465fe5146d
+POST http://localhost:3001/api/posts/like/6231d9d58cc5aab9ba390d9d
 Content-Type: application/json
 
 {
-    "userName": "Oscarini"
+    "userName": "Ana"
 }

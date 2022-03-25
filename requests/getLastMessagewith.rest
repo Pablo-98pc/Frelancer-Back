@@ -1,0 +1,6 @@
+POST http://localhost:3001/api/messages/getLastMessage
+Content-Type: application/json
+
+  { "from" : "Ana",
+    "to" : "Pablo"
+}
